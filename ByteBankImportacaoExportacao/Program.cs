@@ -17,18 +17,26 @@ namespace ByteBankImportacaoExportacao
 
             //Para abrir um arquivo, basta passar o endereço dele e o modlo em que ele será utilizado, neste caso FileMode.Open
             //FileStream = Classe que trata arquivos.
-            FileStream fluxoDoArquivo = new FileStream(enderecoDoArquivo,FileMode.Open);
-            var tam = fluxoDoArquivo.Length;
-
-            //Para ler um arquivo de 1KB
-            var buffer = new byte[1024];
-            while (tam > 0)
+            using (FileStream fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
             {
-                numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1024);
-                tam -= numeroDeBytesLidos;
-                EscreverBuffer(buffer);
-            }
+                var tam = fluxoDoArquivo.Length;
 
+                //Para ler um arquivo de 1KB
+                var buffer = new byte[1024];
+                while (tam > 0)
+                {
+                    numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1024);
+                    tam -= numeroDeBytesLidos;
+                    EscreverBuffer(buffer);
+                }
+            }
+            
+
+            //Deve ser utilizado para toda Stream utilizada, assim que terminar de fazer o que tem q fazer
+            //No caso do arquivo assim que terminar de ler este arquivo
+            //Como estou utilizando o using, não preciso chamar o metodo Close, pois ele é chamado automaticamente no
+            //Dispose da classe Stream (que é pai da FileStream)
+            //fluxoDoArquivo.Close();
             Console.ReadLine();
         }
 
