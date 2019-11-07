@@ -19,15 +19,18 @@ namespace ByteBankImportacaoExportacao
             //FileStream = Classe que trata arquivos.
             using (FileStream fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
             {
-                var tam = fluxoDoArquivo.Length;
+                //var tam = fluxoDoArquivo.Length;
 
                 //Para ler um arquivo de 1KB
                 var buffer = new byte[1024];
-                while (tam > 0)
+                while (numeroDeBytesLidos != 0)
                 {
                     numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1024);
-                    tam -= numeroDeBytesLidos;
-                    EscreverBuffer(buffer);
+
+                    Console.WriteLine($"Bytes lidos: {numeroDeBytesLidos}");
+                    //tam -= numeroDeBytesLidos;
+                    
+                    EscreverBuffer(buffer,numeroDeBytesLidos);
                 }
             }
             
@@ -40,13 +43,13 @@ namespace ByteBankImportacaoExportacao
             Console.ReadLine();
         }
 
-        static void EscreverBuffer(byte[] buffer)
+        static void EscreverBuffer(byte[] buffer, int bytesLidos)
         {
             //Encoding.Default => pega a codificação de texto padrão do arquivo gerado, ou melhor do sistema
             //Operacional utilizado e retorna uma instancia desse padrão, que no nosso caso é o UTF
             var utf8 = Encoding.Default;
 
-            var texto = utf8.GetString(buffer);
+            var texto = utf8.GetString(buffer,0,bytesLidos);
             Console.Write(texto);
 
             //foreach (var meuByte in buffer)
