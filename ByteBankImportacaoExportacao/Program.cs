@@ -8,45 +8,28 @@ using System.Threading.Tasks;
 
 namespace ByteBankImportacaoExportacao 
 { 
-    class Program 
+    partial class Program 
     { 
         static void Main(string[] args) 
         {
-            int numeroDeBytesLidos = -1;
             string enderecoDoArquivo = "contas.txt";
 
-            //Para abrir um arquivo, basta passar o endereço dele e o modlo em que ele será utilizado, neste caso FileMode.Open
-            //FileStream = Classe que trata arquivos.
-            FileStream fluxoDoArquivo = new FileStream(enderecoDoArquivo,FileMode.Open);
-            var tam = fluxoDoArquivo.Length;
-
-            //Para ler um arquivo de 1KB
-            var buffer = new byte[1024];
-            while (tam > 0)
+            //Quando temos unsings aninhado, podemos remover as chaves do mais externo e teremos a ordenação confirme abaixo
+            using(FileStream fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            using (var leitor = new StreamReader(fluxoDeArquivo))
             {
-                numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1024);
-                tam -= numeroDeBytesLidos;
-                EscreverBuffer(buffer);
+                while (!leitor.EndOfStream)
+                {
+                    string linha = leitor.ReadLine();
+                    Console.WriteLine(linha);
+                }
             }
+
 
             Console.ReadLine();
         }
 
-        static void EscreverBuffer(byte[] buffer)
-        {
-            //Encoding.Default => pega a codificação de texto padrão do arquivo gerado, ou melhor do sistema
-            //Operacional utilizado e retorna uma instancia desse padrão, que no nosso caso é o UTF
-            var utf8 = Encoding.Default;
-
-            var texto = utf8.GetString(buffer);
-            Console.Write(texto);
-
-            //foreach (var meuByte in buffer)
-            //{
-            //    Console.Write(meuByte);
-            //    Console.Write(" ");
-            //}
-        }
+        
     }
 } 
  
